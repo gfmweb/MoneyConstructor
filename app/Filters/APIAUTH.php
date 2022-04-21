@@ -25,7 +25,19 @@ class APIAUTH implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        //
+	    $token = $request->getHeaderLine('Authorization');
+	    if(!empty($token)) {
+		    if (preg_match('/Bearer\s(\S+)/', $token, $matches)) {
+			    $token = $matches[1];
+		    }
+	    }
+		if(is_null($token) || empty($token)) {
+			$response = service('response');
+			$response->setBody('Доступ запрещен! Запрос должен содержать headers: { Authorization: `Bearer ВАШ_ТОКЕН`} полученный при выполнении POST запроса с ключами login password на https://'.$_SERVER['SERVER_NAME'].'/API/Login');
+			$response->setStatusCode(403);
+		return $response;
+		
+		}
     }
 
     /**

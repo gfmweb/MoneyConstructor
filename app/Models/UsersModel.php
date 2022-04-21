@@ -8,20 +8,20 @@ class UsersModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'users';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'user_id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['user_login','user_password','user_token','user_refresh_token','user_token_expire','user_settings'];
 
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    
 
     // Validation
     protected $validationRules      = [];
@@ -39,4 +39,83 @@ class UsersModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+	
+	/**
+	 * @param string $login
+	 * @return array
+	 * Возвращает пользователя по его логину
+	 */
+	public function getUserByLogin(string $login):array
+	{
+		return $this->where(['user_login'=>$login])->get(1)->getResultArray();
+	}
+	
+	/**
+	 * @param int $id
+	 * @return array
+	 * Производит пару ТОКЕН + Рефреш_токен для пользователя + создает дату окончания действия токена пользователя
+	 */
+	public function login(int $id):array{
+		$token = password_hash($id.time(),PASSWORD_DEFAULT);
+		$refresh = password_hash(time().$id,PASSWORD_DEFAULT);
+		$token_expire = date('Y-m-d H:i:s',strtotime('+10 minutes'));
+		$this->update($id,
+			[
+				'user_token'            =>  $token,
+				'user_refresh_token'    =>  $refresh,
+				'user_token_expire'     =>  $token_expire
+			]);
+		$result['token']=$token;
+		$result['refresh_token']=$refresh;
+		$result['token_expire']=$token_expire;
+		return $result;
+	}
+	
+	public function getUserByToken(string $token): array
+	{
+		return $this->where(['user_token'=>$token])->get(1)->getResultArray();
+	}
+	
+	/**
+	 * @param int $id
+	 * @return bool
+	 * Меняет пароль пользователя и его текущие токены обычный + рефреш
+	 */
+	public function setNewPasword(int $id):bool
+	{
+		return true;
+	}
+	
+	/**
+	 * @param string $login
+	 * @param string $password
+	 * @param int $group
+	 * @return bool
+	 * Создает нового пользователя
+	 */
+	public function createUser(string $login, string $password, int $group):bool
+	{
+		return true;
+	}
+	
+	/**
+	 * @param int $id
+	 * @return bool
+	 *  Удаляет пользователя
+	 */
+	public function deleteUser(int $id):bool
+	{
+		return true;
+	}
+	
+	/**
+	 * @param int $id
+	 * @param string $settings
+	 * @return bool
+	 * Обновляет пользовательские настройки для конкретного пользователя
+	 */
+	public function setUserSettings(int $id, string $settings):bool
+	{
+		return true;
+	}
 }

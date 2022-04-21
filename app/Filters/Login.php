@@ -25,7 +25,8 @@ class Login implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        //
+	    $this->session = \Config\Services::session();
+		
     }
 
     /**
