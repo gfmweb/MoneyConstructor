@@ -40,7 +40,8 @@ $routes->get('/refresh', 'Login/Login::errorRequest',['var'=>2]);
 $routes->post('/login','Login/Login::login');
 $routes->post('/logout','Login/Login::logout',['filter'=>'auth']);
 $routes->post('/refresh', 'Login/Login::RefreshAuth');
-$routes->post('/methods','API/Client::getUserMethods',['filter'=>'auth']);
+$routes->post('/methods','API/Client::getUserMethods');
+$routes->post('/run','API/Client::run');
 
 
 $routes->get('/test','Test::index');

@@ -74,7 +74,7 @@ class BaseController extends Controller
 	 */
 	public function checkToken(string $tokenExpire):bool
 	{
-		return (strtotime($tokenExpire) < time() )?true:false;
+		return (strtotime($tokenExpire) > time() )?true:false;
 	}
 	
 	

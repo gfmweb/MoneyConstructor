@@ -57,9 +57,7 @@
 				<li class="nav-item" v-on:click="logout" >
 					Выйти
 				</li>
-				<li class="nav-item" v-on:click="refreshMytoken" >
-					Обновить
-				</li>
+				
 				<li v-on:click="getAllowedMethods()"> Доступные методы</li>
 			</ul>
 			</div>
@@ -106,13 +104,45 @@
 					</div>
 					</template>
 					<template v-else>
-						<div class="col-xl-5 col-lg-6 col-md-10 col-sm-12 mx-auto mt-5" v-if="allowed.length > 0">
+						<div class="col-xl-5 col-lg-8 col-md-10 col-sm-12 mx-auto mt-5" v-if="allowed.length > 0">
 							<div class="card">
 								<div class="container">
 									<div class="row mt-4 mb-4 justify-content-between" >
-										<div class="col-lg-4" v-for="method in allowed">
-											<button class="btn btn-success btn-sm btn-rounded">{{method.source_name}}</button>
+										<div class="col-lg-5" v-for="method in allowed">
+											<button class="btn btn-success btn-sm btn-rounded" v-on:click="openModal(method.source_id,method.source_name)">{{method.source_name}}</button>
 										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Modal -->
+						<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">{{active_name}}</h5>
+										<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">Х</button>
+									</div>
+									<div class="modal-body">
+										<div class="container">
+											<div class="row mt-3 mb-3 justify-content-between">
+												<div class="col-lg-6">
+													<label>Телефон</label>
+													<input type="text" class="form-control" v-model="client_tel"/>
+												</div>
+												<div class="col-lg-6">
+													<label>Правила</label>
+													<input type="text" class="form-control" v-model="active_rulles"/>
+												</div>
+											</div>
+											<label>Сообщение</label>
+											<textarea class="form-control" v-model="client_text"></textarea>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+										<button type="button" class="btn btn-primary" v-on:click="sendRequest()">Отправить</button>
 									</div>
 								</div>
 							</div>
@@ -153,7 +183,12 @@
 			refresh_token:null,
 			login:null,
 			password:null,
-			allowed:{}
+			allowed:{},
+			client_tel:null,
+			client_text:null,
+			active_method:null,
+			active_name:null,
+			active_rulles:null
 		},
 		methods:{
 			autorize(){
@@ -221,8 +256,30 @@
 						config
 				).then(res=>{
 					self.allowed = res.data.response
+					
 				}).
-				catch(console.log);
+				catch(res=>{
+					self.refreshMytoken()
+						}
+				);
+			},
+			openModal(id,name){
+				this.active_method = id
+				this.active_name = name
+				$('#exampleModal').modal('show')
+			},
+			sendRequest(){
+				const config = {
+					headers: { Authorization: `Bearer `+this.user_token }
+				};
+				const bodyParameters = {method:this.active_name,phone:this.client_tel,text:this.client_text,params:JSON.stringify(this.active_rulles)}
+				axios.post(
+						'/run',
+						bodyParameters,
+						config
+				).then(res=>{
+					console.log(res.data)
+				})
 			}
 		},
 		
@@ -234,7 +291,6 @@
 				Authorize = JSON.parse(Authorize)
 				this.user_token = Authorize.token
 				this.refresh_token = Authorize.refresh_token
-				
 			}
 		}
 	})
