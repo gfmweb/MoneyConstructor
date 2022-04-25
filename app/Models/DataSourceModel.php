@@ -39,4 +39,11 @@ class DataSourceModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+	
+	
+	public function getAllAllowedDataSources(int $user_id): array
+	{
+		//todo проверка на разрешенный метод для этого пользователя
+	 return $this->db->query('SELECT source_id,source_name FROM datasources WHERE 1 ORDER BY source_id ASC ')->getResultArray();
+	}
 }

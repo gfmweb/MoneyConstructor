@@ -71,6 +71,32 @@ class UsersModel extends Model
 		return $result;
 	}
 	
+	
+	public function refreshToken(string $refresh): array
+	{
+		$user = $this->getWhere(['user_refresh_token'=>$refresh],1)->getResultArray();
+		if(isset($user[0]['user_id'])){
+			$token = $token = password_hash($user[0]['user_id'].time(),PASSWORD_DEFAULT);
+			$refresh = password_hash(time().$user[0]['user_id'],PASSWORD_DEFAULT);
+			$token_expire = date('Y-m-d H:i:s',strtotime('+10 minutes'));
+			$this->update($user[0]['user_id'],
+				[
+					'user_token'            =>  $token,
+					'user_refresh_token'    =>  $refresh,
+					'user_token_expire'     =>  $token_expire
+				]);
+			$result['token']=$token;
+			$result['refresh_token']=$refresh;
+			$result['token_expire']=$token_expire;
+			$result['code']=200;
+			return $result;
+		}
+		else{
+			return ['message'=>'Нет такого пользователя','code'=>404];
+		}
+		
+	}
+	
 	public function getUserByToken(string $token): array
 	{
 		return $this->where(['user_token'=>$token])->get(1)->getResultArray();

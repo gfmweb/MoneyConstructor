@@ -48,5 +48,34 @@ class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
        $this->session = \Config\Services::session();
+	   $this->accessToken = $this->getToken();
     }
+	
+	/**
+	 * @return string
+	 * Вытаскивание токена из заголовков
+	 */
+	private function getToken():string
+	{
+		$token = $this->request->getHeaderLine('Authorization');
+		if(!empty($token)) {
+			if (preg_match('/Bearer\s(\S+)/', $token, $matches)) {
+				$token = $matches[1];
+				$token = trim(str_replace('Bearer','',$token));
+			}
+		}
+		return $token;
+	}
+	
+	/**
+	 * @param string $tokenExpire
+	 * @return bool
+	 * Проверка просроченного токена
+	 */
+	public function checkToken(string $tokenExpire):bool
+	{
+		return (strtotime($tokenExpire) < time() )?true:false;
+	}
+	
+	
 }
