@@ -26,10 +26,12 @@ class Users extends Migration
 	        ],
 	        'user_token'=>[
 		        'type'=>'TEXT',
+		        'constraint'=>64,
 		        'null'=>false,
 	        ],
 	        'user_refresh_token'=>[
 		        'type'=>'TEXT',
+		        'constraint'=>64,
 		        'null'=>false,
 	        ],
 	        'user_token_expire'=>[
@@ -45,8 +47,7 @@ class Users extends Migration
         ]);
 			$this->forge->addPrimaryKey('user_id');
 			$this->forge->addKey('user_login',false);
-			$this->forge->addKey('user_token',false);
-			$this->forge->addKey('user_refresh_token',false);
+			
 			$this->forge->createTable('users');
     }
 
