@@ -10,6 +10,7 @@ use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
+use App\Filters\AdminAuth;
 
 class Filters extends BaseConfig
 {
@@ -26,7 +27,8 @@ class Filters extends BaseConfig
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
 	    'login'         => Loggined::class,
-	    'auth'          => APIAUTH::class
+	    'auth'          => APIAUTH::class,
+	    'admin_auth'    => AdminAuth::class
     ];
 
     /**

@@ -5,8 +5,9 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\Services;
 
-class Loggined implements FilterInterface
+class AdminAuth implements FilterInterface
 {
     /**
      * Do whatever processing this filter needs to do.
@@ -23,9 +24,14 @@ class Loggined implements FilterInterface
      *
      * @return mixed
      */
-    public function before(RequestInterface $request, $arguments = null)
+    public function before(RequestInterface $request,  $arguments = null)
     {
-        //
+        $session = \Config\Services::session();
+		if((!isset($_SESSION['user_is_admin']))||($_SESSION['user_is_admin']!==true)){
+			
+			return redirect()->to(site_url('/admin/login'));
+		}
+		
     }
 
     /**

@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>ЦУП панель администратора</title>
+	<title>Вход в админ панель</title>
 	
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
@@ -16,9 +16,7 @@
 	<link href="/css/mdb.min.css" rel="stylesheet">
 	
 	<style>
-		.pointer{
-			cursor:pointer;
-		}
+		
 		html,
 		body,
 		header,
@@ -105,23 +103,28 @@
 
 
 <!--Main Navigation-->
-<header id="App">
+<header>
 	
 	<nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar">
 		<div class="container">
-			<a class="navbar-brand" href="#"><strong>Админка</strong></a>
+			<a class="navbar-brand" href="#"><strong>ЦУП</strong></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-7"
 			        aria-controls="navbarSupportedContent-7" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent-7">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item">
-						<form action="admin/logout" method="post">
-							<a class="nav-link"><button type="submit" class="btn btn-outline-dark btn-sm btn-rounded">Выйти</button></a>
-						</form>
+		<!--		<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
 					</li>
-				</ul>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Link</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Profile</a>
+					</li>
+				</ul>-->
+				
 			</div>
 		</div>
 	</nav>
@@ -131,79 +134,63 @@
 		<div class="mask rgba-stylish-strong h-100 d-flex justify-content-center align-items-center">
 			<div class="container">
 				<div class="row">
-					<div class="col-xl-5 col-lg-6 col-md-10 col-sm-12 mx-auto mt-lg-5 pointer" >
-						<div class="card wow fadeIn" data-wow-delay="0.3s" v-on:click="openModal">
-							<div class="card-body">
-								<h3 class="h3 text-center">Пользователи</h3>
-								
-							</div>
-						</div>
-					</div>
-					
-					<div class="col-xl-5 col-lg-6 col-md-10 col-sm-12 mx-auto mt-lg-5 pointer">
+					<div class="col-xl-5 col-lg-6 col-md-10 col-sm-12 mx-auto mt-lg-5">
+						
+						<!--Form with header-->
 						<div class="card wow fadeIn" data-wow-delay="0.3s">
 							<div class="card-body">
-								<h3 class="h3 text-center">Каналы связи</h3>
-							
+								
+								<!--Header-->
+								<div class="form-header purple-gradient">
+									<h3><i class="fas fa-user mt-2 mb-2"></i> Вход администратора:</h3>
+								</div>
+								
+								<!--Body-->
+								<form action="/admin/Auth" method="POST">
+									<div class="md-form">
+										<i class="fas fa-user prefix white-text"></i>
+										<input type="text" name="login" id="orangeForm-name" class="form-control">
+										
+									</div>
+									
+									<div class="md-form">
+										<i class="fas fa-lock prefix white-text"></i>
+										<input type="password" name="password" id="orangeForm-pass" class="form-control">
+										
+									</div>
+									
+									<div class="text-center">
+										<button class="btn purple-gradient btn-lg" type="submit">Войти</button>
+										<hr>
+									</div>
+								</form>
 							</div>
 						</div>
+						<!--/Form with header-->
+					
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Окно</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">Х</button>
-				</div>
-				<div class="modal-body">
-					<div class="container">
-					
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
-					<button type="button" class="btn btn-primary">Отправить</button>
-				</div>
-			</div>
-		</div>
-	</div>
+
 </header>
 <!--Main Navigation-->
 
 
 <!--  SCRIPTS  -->
 <!-- JQuery -->
-<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
 <!-- Bootstrap tooltips -->
-<script type="text/javascript" src="js/popper.min.js"></script>
+<script type="text/javascript" src="/js/popper.min.js"></script>
 <!-- Bootstrap core JavaScript -->
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 <!-- MDB core JavaScript -->
-<script type="text/javascript" src="js/mdb.min.js"></script>
+<script type="text/javascript" src="/js/mdb.min.js"></script>
 <script>
 	new WOW().init();
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-<script>
-	const app = new Vue({
-		el:'#App',
-		data:{
-		
-		},
-		methods:{
-			openModal(){
-				$('#exampleModal').modal('show');
-			}
-		}
-	})
-</script>
 </body>
 
 </html>
-
-

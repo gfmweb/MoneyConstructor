@@ -14,7 +14,7 @@ class UsersModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_login','user_password','user_token','user_refresh_token','user_token_expire','user_settings'];
+    protected $allowedFields    = ['user_login','user_role_id','user_password','user_token','user_refresh_token','user_token_expire','user_settings'];
 
     // Dates
     protected $useTimestamps = false;
@@ -144,4 +144,12 @@ class UsersModel extends Model
 	{
 		return true;
 	}
+	
+	
+	public function adminLogin($login)
+	{
+		return $this->join('groups','user_role_id = group_id')->getWhere(['user_login'=>$login],1)->getResultArray();
+	}
+	
+	
 }

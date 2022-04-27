@@ -74,4 +74,21 @@ class Client extends BaseController
 			return $this->respond(['message_ex'=>'Токен был просрочен либо такого пользователя нет. воспользуйтесь refresh_token либо заново авторизируйтесь'],400);
 		}
 	}
+	
+	public function reportList()
+	{
+		$start = $this->request->getVar('start');
+		$finish = $this->request->getVar('finish');
+		if( (isset($user[0]['user_id'])) && ($this->checkToken($user[0]['user_token_expire'])) ){
+			$Datasources =  model(DataSourceModel::class);
+			$user = $this->Users->getUserByToken($this->accessToken);
+			if(isset($user[0]['user_id'])){
+				
+				return $this->respond(['response'=>['requests'=>'массив запросов со статусами','requested_start'=>$start,'requested_finish'=>$finish]],200);
+			}
+		}
+		else{
+			return $this->respond(['message_ex'=>'Токен был просрочен либо такого пользователя нет. воспользуйтесь refresh_token либо заново авторизируйтесь'],400);
+		}
+	}
 }

@@ -42,9 +42,17 @@ $routes->post('/logout','Login/Login::logout',['filter'=>'auth']);
 $routes->post('/refresh', 'Login/Login::RefreshAuth');
 $routes->post('/methods','API/Client::getUserMethods');
 $routes->post('/run','API/Client::run');
+$routes->post('/report','API/Client::report');
+$routes->post('/reportlist','API/Client::reportlist');
+
+$routes->get('/admin','Admin/Index::index',['filter' => 'admin_auth']);
+$routes->get('/admin/login','Admin/Index::login');
+$routes->post('/admin/Auth','Admin/Index::Auth');
+$routes->post('/admin/logout','Admin/Index::logout');
 
 
-$routes->get('/test','Test::index');
+
+$routes->get('/test','');
 
 /*
  * --------------------------------------------------------------------
