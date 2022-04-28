@@ -26,7 +26,7 @@ class Index extends BaseController
 		$password = $this->request->getVar('password');
 		$Users = model(UsersModel::class);
 		$user= $Users->adminLogin($login);
-		if((isset($user[0]))&&(password_verify((string)$password,$user[0]['user_password'])) ){
+		if((isset($user[0]))&&(password_verify((string)$password,$user[0]['user_password']))&&($user[0]['group_id']==1) ){
 			$this->session->set('user_is_admin',true);
 		}
 		return $this->response->redirect('/admin');

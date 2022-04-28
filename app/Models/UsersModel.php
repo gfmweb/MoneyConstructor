@@ -24,7 +24,7 @@ class UsersModel extends Model
     
 
     // Validation
-    protected $validationRules      = [];
+    protected $validationRules      = ['user_login' => 'is_unique[users.user_login]'];
     protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
@@ -39,6 +39,8 @@ class UsersModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+	
+	
 	
 	/**
 	 * @param string $login
@@ -76,7 +78,7 @@ class UsersModel extends Model
 	{
 		$user = $this->getWhere(['user_refresh_token'=>$refresh],1)->getResultArray();
 		if(isset($user[0]['user_id'])){
-			$token = $token = password_hash($user[0]['user_id'].time(),PASSWORD_DEFAULT);
+			$token  = password_hash($user[0]['user_id'].time(),PASSWORD_DEFAULT);
 			$refresh = password_hash(time().$user[0]['user_id'],PASSWORD_DEFAULT);
 			$token_expire = date('Y-m-d H:i:s',strtotime('+10 minutes'));
 			$this->update($user[0]['user_id'],
@@ -104,11 +106,16 @@ class UsersModel extends Model
 	
 	/**
 	 * @param int $id
+	 * @param string $passwordHASH
 	 * @return bool
 	 * Меняет пароль пользователя и его текущие токены обычный + рефреш
 	 */
-	public function setNewPasword(int $id):bool
+	public function setNewPasword(int $id, string $passwordHASH):bool
 	{
+		$token  = password_hash($id.time(),PASSWORD_DEFAULT);
+		$refresh = password_hash(time().$id,PASSWORD_DEFAULT);
+		$token_expire = date('Y-m-d H:i:s',strtotime('+10 minutes'));
+		$this->update($id,['user_password'=>$passwordHASH,'user_token'=>$token,'user_refresh_token'=>$refresh,'user_token_expire'=>$token_expire]);
 		return true;
 	}
 	
@@ -119,8 +126,12 @@ class UsersModel extends Model
 	 * @return bool
 	 * Создает нового пользователя
 	 */
-	public function createUser(string $login, string $password, int $group):bool
+	public function createUser(string $login):bool
 	{
+		$temp_password = password_hash(time(),PASSWORD_DEFAULT);
+		
+		$token_expire = date('Y-m-d H:i:s',strtotime('+10 minutes'));
+		$this->insert(['user_login'=>$login,'user_password'=>$temp_password,'user_token'=>$temp_password,'user_refresh_token'=>$temp_password,'user_token_expire'=>$token_expire]);
 		return true;
 	}
 	
@@ -131,6 +142,7 @@ class UsersModel extends Model
 	 */
 	public function deleteUser(int $id):bool
 	{
+		$this->delete($id);
 		return true;
 	}
 	
@@ -149,6 +161,15 @@ class UsersModel extends Model
 	public function adminLogin($login)
 	{
 		return $this->join('groups','user_role_id = group_id')->getWhere(['user_login'=>$login],1)->getResultArray();
+	}
+	
+	/**
+	 * @return array
+	 * Возвращает всех пользователей системы
+	 */
+	public function getUsers()
+	{
+		return $this->join('groups','user_role_id = group_id')->select(['user_id','user_login','user_settings','group_name'])->get()->getResultArray();
 	}
 	
 	

@@ -50,6 +50,12 @@ $routes->get('/admin/login','Admin/Index::login');
 $routes->post('/admin/Auth','Admin/Index::Auth');
 $routes->post('/admin/logout','Admin/Index::logout');
 
+$routes->get('/api/getUsers','API/Admin::getUsers',['filter'=>'admin_auth']);
+$routes->post('/api/updatePass','API/Admin::updateUser',['filter'=>'admin_auth']);
+$routes->post('/api/addUser','API/Admin::createUser',['filter'=>'admin_auth']);
+$routes->post('/api/deleteUser','API/Admin::delUser',['filter'=>'admin_auth']);
+
+$routes->get('/api/getChanels','API/Admin::getChanels',['filter'=>'admin_auth']);
 
 
 $routes->get('/test','');
