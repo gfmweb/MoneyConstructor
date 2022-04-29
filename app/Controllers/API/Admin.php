@@ -45,4 +45,50 @@ class Admin extends BaseController
 		$DataSource = model(DataSourceModel::class);
 		return $this->respond($DataSource->getAllAllowedDataSources(1),200);
 	}
+	
+	public function newChanel()
+	{
+		$name = $this->request->getVar('name');
+		$code = $this->request->getVar('code');
+		if((!empty($name))&&(!empty($code))){
+			$DataSource = model(DataSourceModel::class);
+			return $this->respond($DataSource->newChanel($name,$code),200);
+		}
+		return $this->respond([],400);
+	}
+	
+	public function editChanel()
+	{
+		$id = (int)$this->request->getVar('id');
+		$name = $this->request->getVar('name');
+		$code = json_decode($this->request->getVar('code'));
+		
+		if((!empty($name))&&(!empty($code))&&(!empty($id))){
+			$DataSource = model(DataSourceModel::class);
+			return $this->respond(['model'=>$DataSource->editChanel($id,$name,$code)],200);
+		}
+		return $this->respond([],400);
+	}
+	
+	public function getChanel()
+	{
+		$id = $this->request->getVar('id');
+		if(!empty($id)){
+			$DataSource = model(DataSourceModel::class);
+			$data = $DataSource->getChanelByID($id);
+			$data = $data[0];
+			$data['source_methods']=htmlspecialchars_decode(json_decode($data['source_methods']));
+			return $this->respond($data,200);
+		}
+			return $this->respond([],400);
+	}
+	
+	public function delChanel()
+	{
+		$id= $this->request->getVar('id');
+		if(!empty($id)){
+			$DataSource = model(DataSourceModel::class);
+			return $DataSource->delChanel($id);
+		}
+	}
 }

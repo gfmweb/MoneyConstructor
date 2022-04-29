@@ -56,7 +56,10 @@ $routes->post('/api/addUser','API/Admin::createUser',['filter'=>'admin_auth']);
 $routes->post('/api/deleteUser','API/Admin::delUser',['filter'=>'admin_auth']);
 
 $routes->get('/api/getChanels','API/Admin::getChanels',['filter'=>'admin_auth']);
-
+$routes->post('/api/newChanel','API/Admin::newChanel',['filter'=>'admin_auth']);
+$routes->get('/api/getChanel','API/Admin::getChanel',['filter'=>'admin_auth']);
+$routes->post('/api/editChanel','API/Admin::editChanel',['filter'=>'admin_auth']);
+$routes->post('/api/deleteChanel','API/Admin::delChanel',['filter'=>'admin_auth']);
 
 $routes->get('/test','');
 

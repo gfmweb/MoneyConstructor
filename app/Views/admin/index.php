@@ -222,13 +222,24 @@
 								</div>
 								<div class="col-8">
 									<div class="row justify-content-around mt-2">
-										<i class="fa fa-pen pointer" title="Редактировать" v-on:click="action('editData',index,item.user_id)"></i>
-										<i class="fas fa-backspace pointer" title="Удалить канал" v-on:click="action('delData',index,item.user_id)"></i>
+										<i class="fa fa-pen pointer" title="Редактировать" v-on:click="action('editData',index,item.source_id)"></i>
+										<i class="fas fa-backspace pointer" title="Удалить канал" v-on:click="action('delData',index,item.source_id)"></i>
 									</div>
 								</div>
 							</div>
 						</div>
 					</template>
+					
+					<template v-if="currentPosition=='newChanel'"	>
+						<div class="container">
+							<input class="form-control" type="text" v-model="newValue" placeholder="Название" />
+							<textarea class="form-control mt-4" rows="20" v-model="codeValue" placeholder="Код метода"></textarea>
+							<div class="row justify-content-center">
+								<button class="btn btn-success btn-sm btn-rounded" v-on:click="action('saveCode','new','new')">Сохранить</button>
+							</div>
+						</div>
+					</template>
+					
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary btn-rounded" data-dismiss="modal">Закрыть</button>
@@ -265,7 +276,8 @@
 			activeDATA:[],
 			currentPosition:'listUsers',
 			targetItem:{},
-			newValue:null
+			newValue:null,
+			codeValue:null
 		},
 		methods:{
 			openModal(mode){
@@ -296,7 +308,51 @@
 			},
 			action (actName, index,itemID)
 			{
+				if(actName == 'createChanel')
+				{
+					this.ModalName = 'Создать новый канал'
+					this.currentPosition = 'newChanel'
+					this.newValue = null
+					this.codeValue = null
+				}
+				if(actName == 'saveCode'){
+					const self = this
+					if(typeof (self.targetItem.code_id!== undefined)){
+						axios.post('api/editChanel',{id:self.targetItem.code_id,name:this.newValue,code:JSON.stringify(this.codeValue)}).then(res=>{
+							self.openModal('chanels')
+						})
+					}
+					else{
+						axios.post('api/newChanel',{name:this.newValue,code:this.codeValue}).then(res=>{
+							self.openModal('chanels')
+						})
+					}
+					
+				}
+				if(actName == 'editData'){
+					this.targetItem = {}
+					this.targetItem = {code_id:itemID}
+					const self = this
+					this.ModalName = 'Редактирование '+this.activeDATA[index].source_name
+					this.currentPosition = 'newChanel'
+					axios.get('api/getChanel?id='+itemID).then(res=>{
+						self.newValue = res.data.source_name
+						self.codeValue = res.data.source_methods
+					})
+					
+				}
+				if(actName == 'delData'){
+					const self = this
+					let choise = confirm ('Удалить канал '+ this.activeDATA[index].source_name + ' ?')
+					if(choise){
+						axios.post('api/deleteChanel',{id:itemID}).then(res=>{
+							self.openModal('chanels')
+						})
+					}
+				}
+				// Пользователи
 				if(actName=='setPass'){
+					this.targetItem = {}
 					this.newValue = null
 					this.ModalName =  this.activeDATA[index].user_login
 					this.currentPosition = 'user'

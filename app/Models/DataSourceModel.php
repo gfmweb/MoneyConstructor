@@ -8,13 +8,13 @@ class DataSourceModel extends Model
 {
     protected $DBGroup          = 'default';
     protected $table            = 'datasources';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'source_id';
     protected $useAutoIncrement = true;
     protected $insertID         = 0;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['source_name','source_setup','source_methods','source_permissions'];
 
     // Dates
     protected $useTimestamps = false;
@@ -41,9 +41,23 @@ class DataSourceModel extends Model
     protected $afterDelete    = [];
 	
 	
-	public function getAllAllowedDataSources(int $user_id): array
-	{
-		//todo проверка на разрешенный метод для этого пользователя
+	public function getAllAllowedDataSources(int $user_id): array{
 	 return $this->db->query('SELECT source_id,source_name FROM datasources WHERE 1 ORDER BY source_id ASC ')->getResultArray();
+	}
+	
+	public function newChanel($name,$code){
+		return $this->insert(['source_name'=>$name,'source_methods'=>json_encode($code,256)]);
+	}
+	
+	public function editChanel($id,$name,$code)	{
+		return $this->update($id,['source_name'=>$name,'source_methods'=>json_encode($code,256)]);
+	}
+	
+	public function getChanelByID($id){
+		return $this->getWhere(['source_id'=>$id])->getResultArray();
+	}
+	
+	public function delChanel($id){
+		return $this->delete($id);
 	}
 }
