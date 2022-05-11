@@ -49,6 +49,9 @@ class BaseController extends Controller
 
        $this->session = \Config\Services::session();
 	   $this->accessToken = $this->getToken();
+	   $this->redis = new \Redis();
+	   $this->redis->connect('127.0.0.1',6379);
+	   $this->redis->select(5);
     }
 	
 	/**

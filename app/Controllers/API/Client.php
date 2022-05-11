@@ -11,7 +11,7 @@ class Client extends BaseController
 	use ResponseTrait;
     public function index()
     {
-        //
+    
     }
 	public function __construct(){
 		$this->Users = model(UsersModel::class);
@@ -40,17 +40,13 @@ class Client extends BaseController
 		$phone = $this->request->getVar('phone');
 		$text = $this->request->getVar('text');
 		$params = $this->request->getVar('params');
-		
 		$user = $this->Users->getUserByToken($this->accessToken);
-		
 		if( (isset($user[0]['user_id'])) && ($this->checkToken($user[0]['user_token_expire'])) ){
 			$Datasources =  model(DataSourceModel::class);
 			$user = $this->Users->getUserByToken($this->accessToken);
 			if(isset($user[0]['user_id'])){
-				
 				$method = $Datasources->getChanelByName($method);
 				$method = $method[0];
-				
 				$method['source_setup'] = json_decode($method['source_setup'],true);
 				$method['source_methods'] = json_decode($method['source_methods']);
 				$TOKEN='5383682458:AAExH44FeKgrkATv0rq7NeMMM7nwnESfDDU';
@@ -70,14 +66,11 @@ class Client extends BaseController
 	public function report()
 	{
 		$id = $this->request->getVar('id');
-		
 		$user = $this->Users->getUserByToken($this->accessToken);
-		
 		if( (isset($user[0]['user_id'])) && ($this->checkToken($user[0]['user_token_expire'])) ){
 			$Datasources =  model(DataSourceModel::class);
 			$user = $this->Users->getUserByToken($this->accessToken);
 			if(isset($user[0]['user_id'])){
-				
 				return $this->respond(['response'=>['report'=>'Статус','requested_id'=>$id]],200);
 			}
 		}
@@ -94,7 +87,6 @@ class Client extends BaseController
 			$Datasources =  model(DataSourceModel::class);
 			$user = $this->Users->getUserByToken($this->accessToken);
 			if(isset($user[0]['user_id'])){
-				
 				return $this->respond(['response'=>['requests'=>'массив запросов со статусами','requested_start'=>$start,'requested_finish'=>$finish]],200);
 			}
 		}
