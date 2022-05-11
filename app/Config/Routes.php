@@ -61,7 +61,7 @@ $routes->get('/api/getChanel','API/Admin::getChanel',['filter'=>'admin_auth']);
 $routes->post('/api/editChanel','API/Admin::editChanel',['filter'=>'admin_auth']);
 $routes->post('/api/deleteChanel','API/Admin::delChanel',['filter'=>'admin_auth']);
 
-$routes->get('/test','');
+$routes->get('/test','Test::index');
 
 /*
  * --------------------------------------------------------------------

@@ -314,10 +314,11 @@
 					this.currentPosition = 'newChanel'
 					this.newValue = null
 					this.codeValue = null
+					console.log('New chanel can be created');
 				}
 				if(actName == 'saveCode'){
 					const self = this
-					if(typeof (self.targetItem.code_id!== undefined)){
+					if(self.targetItem.hasOwnProperty('code_id')){
 						axios.post('api/editChanel',{id:self.targetItem.code_id,name:this.newValue,code:JSON.stringify(this.codeValue)}).then(res=>{
 							self.openModal('chanels')
 						})

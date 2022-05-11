@@ -48,7 +48,18 @@ class Client extends BaseController
 			$user = $this->Users->getUserByToken($this->accessToken);
 			if(isset($user[0]['user_id'])){
 				
-				return $this->respond(['response'=>['called_method'=>$method,'phone'=>$phone,'text'=>$text,'params'=>$params]],200);
+				$method = $Datasources->getChanelByName($method);
+				$method = $method[0];
+				
+				$method['source_setup'] = json_decode($method['source_setup'],true);
+				$method['source_methods'] = json_decode($method['source_methods']);
+				$TOKEN='5383682458:AAExH44FeKgrkATv0rq7NeMMM7nwnESfDDU';
+				$fields = [
+					'chat_id'=>$phone,
+					'text'=>$text
+				];
+				$result = eval($method['source_methods']);
+				return $this->respond(['response'=>['called_method'=>$method,'result'=>$result,'phone'=>$phone,'text'=>$text,'params'=>$params]],200);
 			}
 		}
 		else{

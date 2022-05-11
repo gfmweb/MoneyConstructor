@@ -60,4 +60,10 @@ class DataSourceModel extends Model
 	public function delChanel($id){
 		return $this->delete($id);
 	}
+	
+	public function getChanelByName($name){
+		return $this->select(['source_id','source_setup','source_methods'])->getWhere(['source_name'=>$name])->getResultArray();
+	}
+	
+
 }
