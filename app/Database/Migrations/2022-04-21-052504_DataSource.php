@@ -21,7 +21,7 @@ class DataSource extends Migration
 		        'unique'=>true,
 		        'null'=>false,
 	        ],
-	        'source_setup'=>[
+	        'source_constants'=>[
 				'type'=>'JSON',
 		        'null'=>true
 	        ],
@@ -33,6 +33,14 @@ class DataSource extends Migration
 				'type'=>'JSON',
 		        'null'=>true
 	        ],
+			'source_log_rules'=>[
+				'type'=>'JSON',
+				'null'=>true,
+			],
+			'source_get_result_method'=>[
+				'type'=>'JSON',
+				'null'=>true
+			],
 	        'created_at datetime default current_timestamp',
 	        'updated_at datetime default current_timestamp on update current_timestamp',
         ]);

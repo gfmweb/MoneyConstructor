@@ -14,7 +14,7 @@ class DataSourceModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['source_name','source_setup','source_methods','source_permissions'];
+    protected $allowedFields    = ['source_name','source_constants','source_methods','source_permissions','source_log_rules','source_get_result_method'];
 
     // Dates
     protected $useTimestamps = false;
@@ -62,7 +62,7 @@ class DataSourceModel extends Model
 	}
 	
 	public function getChanelByName($name){
-		return $this->select(['source_id','source_setup','source_methods'])->getWhere(['source_name'=>$name])->getResultArray();
+		return $this->select(['source_id','source_constants','source_methods','source_name'])->getWhere(['source_name'=>$name])->getResultArray();
 	}
 	
 

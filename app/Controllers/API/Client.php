@@ -3,6 +3,8 @@
 namespace App\Controllers\API;
 
 use App\Controllers\BaseController;
+use App\Controllers\Logger;
+use App\Models\JobsModel;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\UsersModel;
 use App\Models\DataSourceModel;
@@ -40,22 +42,31 @@ class Client extends BaseController
 		$phone = $this->request->getVar('phone');
 		$text = $this->request->getVar('text');
 		$params = $this->request->getVar('params');
+		$Jobs = model(JobsModel::class);
 		$user = $this->Users->getUserByToken($this->accessToken);
 		if( (isset($user[0]['user_id'])) && ($this->checkToken($user[0]['user_token_expire'])) ){
 			$Datasources =  model(DataSourceModel::class);
 			$user = $this->Users->getUserByToken($this->accessToken);
 			if(isset($user[0]['user_id'])){
 				$method = $Datasources->getChanelByName($method);
-				$method = $method[0];
-				$method['source_setup'] = json_decode($method['source_setup'],true);
-				$method['source_methods'] = json_decode($method['source_methods']);
-				$TOKEN='5383682458:AAExH44FeKgrkATv0rq7NeMMM7nwnESfDDU';
-				$fields = [
-					'chat_id'=>$phone,
-					'text'=>$text
-				];
-				$result = eval($method['source_methods']);
-				return $this->respond(['response'=>['called_method'=>$method,'result'=>$result,'phone'=>$phone,'text'=>$text,'params'=>$params]],200);
+				if(isset($method[0])) {
+					$method = $method[0];
+					$method['source_constants'] = json_decode($method['source_constants'], true);
+					$method['source_methods'] = json_decode($method['source_methods']);
+					
+					$fields = ['chat_id' => $phone, 'text' => $text];
+					$job_id = $Jobs->CreateJob($method['source_name']);
+					$result = eval($method['source_methods']);
+					$Parse  = new Parsresults();
+					$result = $Parse->Parse($method['source_name'],$result);
+					$Jobs->UpdateResults($job_id,json_encode($result,256));
+					$Logger = new Logger();
+					$Logger->log_job('Постановка работы и первичное исполнение','jobs',$job_id,$method['source_name'],$result);
+					return $this->respond(['response' => ['called_method' => $method, 'result' => $result, 'phone' => $phone, 'text' => $text, 'params' => $params]], 200);
+				}
+			else{
+				return $this->respond(['message_ex'=>'Метод не найден'],400);
+			}
 			}
 		}
 		else{

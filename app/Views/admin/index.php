@@ -153,7 +153,7 @@
 		</div>
 	</section>
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">{{ModalName}}</h5>
@@ -314,7 +314,7 @@
 					this.currentPosition = 'newChanel'
 					this.newValue = null
 					this.codeValue = null
-					console.log('New chanel can be created');
+					
 				}
 				if(actName == 'saveCode'){
 					const self = this
